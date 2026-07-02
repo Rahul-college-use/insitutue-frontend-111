@@ -72,6 +72,7 @@ export default function Register({ setIsAuthenticated }) {
       setLoadingColleges(true);
       try {
         const list = await apiService.getFilteredColleges(formData.universityId, formData.degreeCategory);
+        console.log(list)
         if (isMounted) {
           setColleges(list || []);
           setFormData(prev => ({ ...prev, collegeId: '' }));

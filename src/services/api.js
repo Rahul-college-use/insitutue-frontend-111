@@ -860,17 +860,17 @@ export const MOCK_UNIVERSITIES = [
 
 export const MOCK_COLLEGES = [
   // ===== BEU =====
-  { id: "gecg", name: "Government Engineering College, Gaya", universityId: "beu", category: "engineering" },
-  { id: "gecj", name: "Government Engineering College, Jehanabad", universityId: "beu", category: "engineering" },
-  { id: "gecb", name: "Government Engineering College, Bhojpur", universityId: "beu", category: "engineering" },
-  { id: "gecva", name: "Government Engineering College, Vaishali", universityId: "beu", category: "engineering" },
-  { id: "mit", name: "Muzaffarpur Institute of Technology", universityId: "beu", category: "engineering" },
-  { id: "nitp", name: "Nalanda College of Engineering", universityId: "beu", category: "engineering" },
+  { id: "gecg", name: "Government Engineering College, Gaya", universityId: "beu", category: "btech_diploma" },
+  { id: "gecj", name: "Government Engineering College, Jehanabad", universityId: "beu", category: "btech_diploma" },
+  { id: "gecb", name: "Government Engineering College, Bhojpur", universityId: "beu", category: "btech_diploma" },
+  { id: "gecva", name: "Government Engineering College, Vaishali", universityId: "beu", category: "btech_diploma" },
+  { id: "mit", name: "Muzaffarpur Institute of Technology", universityId: "beu", category: "btech_diploma" },
+  { id: "nitp", name: "Nalanda College of Engineering", universityId: "beu", category: "btech_diploma" },
 
   // ===== AKU =====
-  { id: "bcet", name: "Bhagalpur College of Engineering", universityId: "aku", category: "engineering" },
-  { id: "gcegopal", name: "Gaya College of Engineering", universityId: "aku", category: "engineering" },
-  { id: "darbhanga_eng", name: "Darbhanga College of Engineering", universityId: "aku", category: "engineering" },
+  { id: "bcet", name: "Bhagalpur College of Engineering", universityId: "aku", category: "btech_diploma" },
+  { id: "gcegopal", name: "Gaya College of Engineering", universityId: "aku", category: "btech_diploma" },
+  { id: "darbhanga_eng", name: "Darbhanga College of Engineering", universityId: "aku", category: "btech_diploma" },
 
   // ===== PPU =====
   { id: "anc", name: "Anugrah Narayan College, Patna", universityId: "ppu", category: "ugc" },
@@ -903,7 +903,7 @@ export const MOCK_COLLEGES = [
   { id: "tpcollege", name: "T.P. College, Madhepura", universityId: "bnmu", category: "ugc" }
 ];
 export const MOCK_DEPARTMENTS = {
-  engineering: [
+  btech_diploma: [
     { id: "cse", name: "Computer Science & Engineering" },
     { id: "it", name: "Information Technology" },
     { id: "ai", name: "Artificial Intelligence & Data Science" },

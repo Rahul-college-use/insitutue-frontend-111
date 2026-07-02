@@ -2,24 +2,26 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
 import { VitePWA } from 'vite-plugin-pwa' 
+
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [
     react(), 
     tailwindcss(),
-    VitePWA({ // 2. PWA settings add karein
+    VitePWA({
       registerType: 'autoUpdate',
+      injectRegister: 'inline', // Service worker ko automatically inject karega
       manifest: {
         name: 'Internship Place',
         short_name: 'InternPlace',
         description: 'Manage internships and student enrollments',
-        theme_color: '#070708', // Aapka dark theme color
+        theme_color: '#070708', 
         background_color: '#070708',
-        display: 'standalone', // Is line se ye browser ka top bar chhupa kar bilkul asli app jaisa dikhega
+        display: 'standalone', 
         orientation: 'portrait',
         icons: [
           {
-            src: 'pwa-192x192.png', // Apne public folder mein ye icons zaroor rakhna
+            src: 'pwa-192x192.png', 
             sizes: '192x192',
             type: 'image/png'
           },
@@ -33,7 +35,6 @@ export default defineConfig({
     })
   ],
   resolve: {
-    dedupe: ['react', 'react-dom'], // 🌟 Forces a single instance of React
+    dedupe: ['react', 'react-dom'], 
   },
-  
 })

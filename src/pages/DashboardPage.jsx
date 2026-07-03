@@ -12,6 +12,7 @@ import Support from '../components/user/dashboard/Support';
 import LiveClasses from '../components/user/dashboard/course/LiveClasses';
 import RecordedLectures from '../components/user/dashboard/course/RecordedLectures';
 import CoursePurchaseCatalog from '../components/user/dashboard/CoursePurchaseCatalog';
+import AccountSettings from '../components/user/dashboard/AccountSettings';
 import { apiService } from '../services/api';
 
 export default function DashboardPage({ setIsAuthenticated }) {
@@ -84,12 +85,12 @@ export default function DashboardPage({ setIsAuthenticated }) {
         transition-transform duration-300 ease-in-out
         ${sidebarExpanded ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
       `}>
-        {console.log("Has Purchased Course:", !hasPurchasedCourse,[activeTab, 'dashboard', 'profile', 'support'].includes(activeTab))};
+        {console.log("Has Purchased Course:", !hasPurchasedCourse,[activeTab, 'dashboard', 'profile', 'support', 'account-settings'].includes(activeTab))};
         <Sidebar
           activeTab={activeTab}
           setActiveTab={(tab) => {
             // Un-enrolled members gateway guard verification rails
-            if (!hasPurchasedCourse && !['dashboard', 'profile', 'support'].includes(tab)) {
+            if (!hasPurchasedCourse && !['dashboard', 'profile', 'support', 'account-settings'].includes(tab)) {
               alert("Please enroll in a program specialization to unlock this workspace panel.");
               return;
             }
@@ -110,6 +111,7 @@ export default function DashboardPage({ setIsAuthenticated }) {
           onToggleSidebar={() => setSidebarExpanded(!sidebarExpanded)}
           sidebarExpanded={sidebarExpanded}
           user={currentUser}
+          setActiveTab={setActiveTab}
         />
 
         {/* Active Child Elements Canvas Router Switches */}
@@ -123,7 +125,7 @@ export default function DashboardPage({ setIsAuthenticated }) {
 
           ) : (
             <>
-              {activeTab === 'dashboard' && <MainDashboard user={currentUser} />}
+              {activeTab === 'dashboard' && <MainDashboard user={currentUser} setActiveTab={setActiveTab} />}
               {activeTab === 'profile' && <MyProfile user={currentUser} />}
               {activeTab === 'internship' && <MyInternship user={currentUser} />}
               {activeTab === 'attendance' && <Attendance user={currentUser} />}
@@ -132,10 +134,11 @@ export default function DashboardPage({ setIsAuthenticated }) {
               {activeTab === 'support' && <Support user={currentUser} />}
               {activeTab === 'live-classes' && <LiveClasses user={currentUser} />}
               {activeTab === 'recorded-lectures' && <RecordedLectures user={currentUser} />}
+              {activeTab === 'account-settings' && <AccountSettings user={currentUser} />}
               {/* {console.log("Active Tab State:", currentUser, activeTab)}; */}
 
               {/* Secure fallback tracking check layout state validation blocks */}
-              {!['dashboard', 'profile', 'internship', 'attendance', 'certificates', 'announcements', 'support', 'live-classes', 'recorded-lectures'].includes(activeTab) && (
+              {!['dashboard', 'profile', 'internship', 'attendance', 'certificates', 'announcements', 'support', 'live-classes', 'recorded-lectures', 'account-settings'].includes(activeTab) && (
                 <div className="flex items-center justify-center h-full text-slate-400 font-medium text-sm p-6 text-center border border-dashed border-slate-200 rounded-3xl bg-white">
                   Section content for tracking path stream "{activeTab}" is initializing...
                 </div>

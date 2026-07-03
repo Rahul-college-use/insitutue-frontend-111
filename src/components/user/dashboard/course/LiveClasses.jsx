@@ -29,7 +29,8 @@ export default function LiveClasses({ user }) {
   const isLinkLoaded = !!rawStreamLink;
   const isChatCurrentlyAllowed = isChatAllowed && isLinkLoaded;
 
-  const url = "http://localhost:3000 || https://internshipplace-bend.vercel.app/api/auth";
+  // const url = "http://localhost:3000";
+  const url = "https://internshipplace-bend.vercel.app/api/auth";
 
   // 3. Helper Functions
   const getStreamEngineType = (linkUrl) => {

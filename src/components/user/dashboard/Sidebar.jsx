@@ -1,7 +1,7 @@
 import React from 'react';
 import {
   LayoutDashboard, User, GraduationCap, Calendar, FileText,
-  BookOpen,  FileCheck, Shield, Award, Users, Bell, Headphones, Radio, CirclePlay
+  BookOpen, FileCheck, Shield, Award, Users, Bell, Headphones, Radio, CirclePlay,Settings
 } from 'lucide-react';
 import { CircleHelp } from 'lucide-react';
 export default function Sidebar({ activeTab, setActiveTab, isExpanded, setIsExpanded }) {
@@ -33,6 +33,8 @@ export default function Sidebar({ activeTab, setActiveTab, isExpanded, setIsExpa
       groupName: "Ecosystem",
       items: [
         { id: 'announcements', label: 'Announcements', icon: <Bell className="w-4 h-4" />, badge: true },
+        { id: 'account-settings', label: 'Account Settings', icon: <Settings className="w-4 h-4" /> },
+
       ]
     }
   ];
@@ -69,7 +71,7 @@ export default function Sidebar({ activeTab, setActiveTab, isExpanded, setIsExpa
             <span className={`text-[9px] font-bold text-slate-400 uppercase tracking-wider px-3 block mb-1 ${!isExpanded ? 'lg:hidden' : 'block'}`}>
               {group.groupName}
             </span>
-            
+
             {group.items.map((item) => {
               const isActive = activeTab === item.id;
               return (

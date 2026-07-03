@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { apiService } from '../../../services/api';
 
 // ✅ FIXED: Consuming 'user' straight from parent prop to avoid duplicate mounting API loops
-export default function Topbar({ setIsAuthenticated, onToggleSidebar, sidebarExpanded, user }) {
+export default function Topbar({ setIsAuthenticated, onToggleSidebar, sidebarExpanded, user , setActiveTab }) {
   const navigate = useNavigate();
   const [showProfileMenu, setShowProfileMenu] = useState(false);
 
@@ -38,7 +38,7 @@ export default function Topbar({ setIsAuthenticated, onToggleSidebar, sidebarExp
       <div className="hidden md:flex items-center gap-2.5 bg-amber-50/60 border border-amber-500/10 text-amber-800 px-4 py-2 rounded-xl text-xs font-semibold max-w-xl lg:ml-0 ml-auto">
         <AlertCircle className="w-4 h-4 text-amber-600 shrink-0" />
         <span className="truncate">
-          <strong className="font-bold">Important:</strong> Submit your final internship project report before 25 May 2026.
+          <strong className="font-bold">Important:</strong> Be vigilant about your data security.
         </span>
         <button className="text-[#0066ff] hover:underline font-bold text-[11px] shrink-0 ml-1">
           View Details
@@ -82,6 +82,9 @@ export default function Topbar({ setIsAuthenticated, onToggleSidebar, sidebarExp
               {user?.fullName || 'Student Node'}
             </span>
             <span className="block text-[10px] text-slate-400 font-bold uppercase tracking-wider mt-0.5 truncate max-w-[120px]">
+              {user?.department || 'GECJ-STUDENT'}
+            </span>
+            <span className="block text-[10px] text-slate-400 font-bold uppercase tracking-wider mt-0.5 truncate max-w-[120px]">
               {user?.universityRoll || 'GECJ-STUDENT'}
             </span>
           </div>
@@ -102,15 +105,9 @@ export default function Topbar({ setIsAuthenticated, onToggleSidebar, sidebarExp
               </div>
 
               {/* ✅ UX CLEANUP: Closed drop layout window instead of triggering raw route failures */}
-              <button
-                onClick={() => setShowProfileMenu(false)}
-                className="w-full flex items-center gap-2.5 px-4 py-2 hover:bg-slate-50 text-xs sm:text-sm text-left transition"
-              >
-                <User className="w-4 h-4 text-slate-400" />
-                Profile Context View
-              </button>
+            
 
-              <button onClick={() => setShowProfileMenu(false)} className="w-full flex items-center gap-2.5 px-4 py-2 hover:bg-slate-50 text-xs sm:text-sm text-left transition">
+              <button onClick={() => { setShowProfileMenu(false); setActiveTab('account-settings'); }} className="w-full flex items-center gap-2.5 px-4 py-2 hover:bg-slate-50 text-xs sm:text-sm text-left transition">
                 <Settings className="w-4 h-4 text-slate-400" />
                 Account Settings
               </button>

@@ -44,7 +44,7 @@ export default function CourseWorkshopDesk({ selectedCourseId, coursesList, trig
   const itemsPerPage = 5;
 
   // const url = "http://localhost:3000";
-  const url = "https://internshipplace-bend.vercel.app/api/auth";
+  const url = "https://internshipplace-bend.vercel.app";
   const activeCourse = coursesList.find(c => c._id === selectedCourseId);
 
   // Stream Extraction Utilities

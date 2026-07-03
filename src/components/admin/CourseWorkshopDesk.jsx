@@ -47,7 +47,6 @@ export default function CourseWorkshopDesk({ selectedCourseId, coursesList, trig
   const url = "https://internshipplace-bend.vercel.app";
   const activeCourse = coursesList.find(c => c._id === selectedCourseId);
 
-  // Stream Extraction Utilities
   const getStreamEngineType = (url) => {
     if (!url) return 'obs';
     if (url.includes('youtube.com') || url.includes('youtu.be')) return 'youtube';

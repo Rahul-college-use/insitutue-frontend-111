@@ -53,6 +53,7 @@ export default function CourseWorkshopDesk({ selectedCourseId, coursesList, trig
     if (url.includes('zoom.us')) return 'zoom';
     return 'obs';
   };
+  console.log("url",url);
 
   const extractYoutubeId = (url) => {
     if (!url) return '';

@@ -10,7 +10,7 @@ import { apiService } from '../services/api';
 
 export default function Home({ setIsAuthenticated }) {
   const navigate = useNavigate();
-  
+
   useEffect(() => {
     // ✅ FIXED: Using the clean centralized key format for strict role definitions
     const tokenExists = !!localStorage.getItem('token');
@@ -24,7 +24,7 @@ export default function Home({ setIsAuthenticated }) {
       }
       return;
     }
-    window.scrollTo({ top: 0, behavior: "smooth" }); 
+    window.scrollTo({ top: 0, behavior: "smooth" });
   }, [navigate]);
 
   // State management for dynamic program tracks rendering
@@ -90,6 +90,7 @@ export default function Home({ setIsAuthenticated }) {
           </div>
 
           {/* Dynamic Render States */}
+          {/* Dynamic Render States */}
           {loading ? (
             <div className="flex flex-col justify-center items-center py-20 space-y-4">
               <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-[#0066ff]" />
@@ -100,22 +101,48 @@ export default function Home({ setIsAuthenticated }) {
               <p className="text-sm text-rose-400 font-semibold">{error}</p>
             </div>
           ) : (
-            /* Premium Responsive Grid */
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
-              {programs.map((prog) => (
-                <div
-                  key={prog.id || prog._id}
-                  className="transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl hover:shadow-blue-500/5 rounded-xl group"
-                >
-                  <ProgramCard
-                    title={prog.title || prog.courseName}
-                    meta={prog.meta}
-                    cert={prog.cert}
-                    iconName={prog.iconName}
-                    borderColor="border-slate-800 hover:border-blue-500/40"
-                  />
-                </div>
-              ))}
+            /* 👉 OVERFLOW HIDDEN CONTAINER: Jo screen se bahar jane wale boxes ko cover karega */
+            <div className="w-full overflow-x-hidden py-4 relative">
+
+              {/* 👉 SMOOTH GRADIENT OVERLAYS (Optional): Left/Right edges par fade effect ke liye */}
+              <div className="absolute left-0 top-0 bottom-0 w-16 bg-gradient-to-r from-slate-950 to-transparent z-10 pointer-events-none" />
+              <div className="absolute right-0 top-0 bottom-0 w-16 bg-gradient-to-l from-slate-950 to-transparent z-10 pointer-events-none" />
+
+              {/* 👉 ANIMATED MARQUEE ROW */}
+              <div className="flex gap-6 w-max animate-marquee">
+                {/* Array ko double kiya hai loop smooth chalne ke liye */}
+                {[...programs, ...programs].map((prog, index) => {
+                  const displayTitle = prog.title || prog.courseName || "Course";
+                  const firstChar = displayTitle.trim().charAt(0).toUpperCase();
+
+                  return (
+                    <div
+                      key={`${prog.id || prog._id}-${index}`}
+                      /* 👉 FIXED WIDTH & HEIGHT: Isse saare boxes ka size bilkul 100% same rahega */
+                      className="flex flex-col w-[280px] sm:w-[320px] h-[340px] justify-between transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl hover:shadow-blue-500/5 rounded-xl bg-white border border-slate-200 shrink-0"
+                    >
+                      <div className="p-6 flex flex-col items-center text-center justify-between h-full w-full">
+
+                        {/* 👉 EXACT PLACEHOLDER: ? mark ki jagah course ka pehla letter */}
+                        <div className="w-12 h-12 rounded-full border border-slate-200 bg-slate-50 flex items-center justify-center font-bold text-lg text-blue-600 shadow-sm mb-4 group-hover:bg-blue-50 group-hover:border-blue-200 transition-colors duration-300">
+                          {firstChar}
+                        </div>
+
+                        {/* 👉 CARD DETAILS */}
+                        <div className="flex-grow flex flex-col justify-between w-full space-y-4">
+                          <ProgramCard
+                            title={displayTitle}
+                            meta={prog.meta}
+                            cert={prog.cert}
+                            borderColor="border-transparent"
+                          />
+                        </div>
+
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
             </div>
           )}
 

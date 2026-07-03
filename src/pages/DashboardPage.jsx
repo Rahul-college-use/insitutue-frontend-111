@@ -27,7 +27,7 @@ export default function DashboardPage({ setIsAuthenticated }) {
       const user = await apiService.getStoredUser();
       if (user && user.user) {
         setCurrentUser(user.user);
-        
+
         // 🔒 SAFETY REDIRECTION ENGINE: Agar login karne wala admin hai, toh use clear target mapping route par redirect karo!
         if (user.user.isAdmin === true) {
           navigate('/admin/dashboard', { replace: true });
@@ -84,6 +84,7 @@ export default function DashboardPage({ setIsAuthenticated }) {
         transition-transform duration-300 ease-in-out
         ${sidebarExpanded ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
       `}>
+        {console.log("Has Purchased Course:", !hasPurchasedCourse,[activeTab, 'dashboard', 'profile', 'support'].includes(activeTab))};
         <Sidebar
           activeTab={activeTab}
           setActiveTab={(tab) => {
@@ -117,7 +118,9 @@ export default function DashboardPage({ setIsAuthenticated }) {
             <CoursePurchaseCatalog
               user={currentUser}
               onPurchaseSuccess={fetchdata}
+
             />
+
           ) : (
             <>
               {activeTab === 'dashboard' && <MainDashboard user={currentUser} />}
@@ -129,6 +132,7 @@ export default function DashboardPage({ setIsAuthenticated }) {
               {activeTab === 'support' && <Support user={currentUser} />}
               {activeTab === 'live-classes' && <LiveClasses user={currentUser} />}
               {activeTab === 'recorded-lectures' && <RecordedLectures user={currentUser} />}
+              {/* {console.log("Active Tab State:", currentUser, activeTab)}; */}
 
               {/* Secure fallback tracking check layout state validation blocks */}
               {!['dashboard', 'profile', 'internship', 'attendance', 'certificates', 'announcements', 'support', 'live-classes', 'recorded-lectures'].includes(activeTab) && (

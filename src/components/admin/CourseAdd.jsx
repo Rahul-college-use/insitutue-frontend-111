@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { PlusCircle, Loader2, Calendar, FileCheck, Layers, XCircle, CheckCircle, AlertTriangle } from 'lucide-react';
+import { PlusCircle, Loader2, Calendar, FileCheck, Layers, CheckCircle, AlertTriangle } from 'lucide-react';
 import { apiService } from '../../services/api';
 
 export default function CourseAdd({ setActiveSubView, triggerRefresh }) {
@@ -10,14 +10,11 @@ export default function CourseAdd({ setActiveSubView, triggerRefresh }) {
     thumbnail: 'https://images.unsplash.com/photo-1618401471353-b98aedd07871',
     courseStartDate: '', 
     courseEndDate: '', 
-    cert: 'AICTE Compliant', 
-    meta: 'B.Tech / Diploma'
+    cert: 'AICTE Compliant', // Enum default matching model
+    meta: 'B.Tech / Diploma'  // Enum default matching model
   });
   const [submitting, setSubmitting] = useState(false);
   const [toastMessage, setToastMessage] = useState(null);
-  
-  // ✅ EXACT WORKING URL CONTEXT NODE
-  // const url = "http://localhost:3000";
 
   const triggerToast = (msg, isError = false) => {
     setToastMessage({ text: msg, error: isError });
@@ -26,22 +23,21 @@ export default function CourseAdd({ setActiveSubView, triggerRefresh }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    // फ्रंटएंड पर एक और सुरक्षा: सबमिट करने से पहले डेट्स चेक कर लें
+    if (new Date(form.courseEndDate) < new Date(form.courseStartDate)) {
+      triggerToast("❌ Termination Date cannot be before Batch Kickoff!", true);
+      return;
+    }
+
     try {
       setSubmitting(true);
-      // const token = localStorage.getItem("token");
       const data = await apiService.addCourse(form);
-      // const res = await fetch(`${url}/api/auth/coursesAdd`, {
-      //   method: "POST",
-      //   headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` },
-      //   body: JSON.stringify(form)
-      // });
-      // const data = await res.json();
       
       if (data.success) {
         triggerToast("🎉 New Training Track Injected Successfully!");
         triggerRefresh();
         
-        // Short timeout allows the admin to read the toast before redirect routing happens
         setTimeout(() => {
           setActiveSubView('registrations'); 
         }, 1200);
@@ -110,7 +106,7 @@ export default function CourseAdd({ setActiveSubView, triggerRefresh }) {
             rows={4} 
             value={form.description} 
             onChange={(e) => setForm({...form, description: e.target.value})} 
-            placeholder="Outline training roadmap specifications, structural design blueprints, and production scope components clearly..." 
+            placeholder="Outline training roadmap specifications..." 
             className="w-full px-3.5 py-2.5 bg-[#050507] border border-zinc-800 rounded-xl focus:outline-none focus:border-zinc-600 text-white font-medium placeholder-zinc-700 transition-colors duration-150 resize-none leading-relaxed text-xs" 
           />
         </div>
@@ -137,6 +133,7 @@ export default function CourseAdd({ setActiveSubView, triggerRefresh }) {
               required 
               type="date" 
               value={form.courseEndDate} 
+              min={form.courseStartDate} // ✅ स्मार्ट फ्रंटएंड रिस्ट्रिक्शन: स्टार्ट डेट से पहले की तारीखें डिसेबल हो जाएंगी
               onChange={(e) => setForm({...form, courseEndDate: e.target.value})} 
               className="w-full px-3.5 py-2.5 bg-[#050507] border border-zinc-800 rounded-xl focus:outline-none focus:border-zinc-600 text-white font-medium transition-colors duration-150 [color-scheme:dark]" 
             />
@@ -145,28 +142,38 @@ export default function CourseAdd({ setActiveSubView, triggerRefresh }) {
 
         {/* Dual Input Grid: Extra Meta/Compliance Tags */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          
+          {/* ✅ बदला हुआ ड्रॉपडाउन 1: Compliance Label (enum matched) */}
           <div className="space-y-1.5">
             <label className="block text-[9px] font-mono font-bold text-zinc-500 uppercase tracking-widest flex items-center gap-1.5">
               <FileCheck className="w-3 h-3 text-zinc-600" /> Compliance Label
             </label>
-            <input 
-              type="text" 
+            <select 
               value={form.cert} 
               onChange={(e) => setForm({...form, cert: e.target.value})} 
-              className="w-full px-3.5 py-2.5 bg-[#050507] border border-zinc-800 rounded-xl focus:outline-none focus:border-zinc-600 text-white font-medium transition-colors duration-150" 
-            />
+              className="w-full px-3.5 py-2.5 bg-[#050507] border border-zinc-800 rounded-xl focus:outline-none focus:border-zinc-600 text-white font-medium transition-colors duration-150 cursor-pointer"
+            >
+              <option value="AICTE Compliant">AICTE Compliant</option>
+              <option value="UGC Compliant">UGC Compliant</option>
+            </select>
           </div>
+
+          {/* ✅ बदला हुआ ड्रॉपडाउन 2: Categorization Vector (enum matched) */}
           <div className="space-y-1.5">
             <label className="block text-[9px] font-mono font-bold text-zinc-500 uppercase tracking-widest flex items-center gap-1.5">
               <Layers className="w-3 h-3 text-zinc-600" /> Categorization Vector
             </label>
-            <input 
-              type="text" 
+            <select 
               value={form.meta} 
               onChange={(e) => setForm({...form, meta: e.target.value})} 
-              className="w-full px-3.5 py-2.5 bg-[#050507] border border-zinc-800 rounded-xl focus:outline-none focus:border-zinc-600 text-white font-medium transition-colors duration-150" 
-            />
+              className="w-full px-3.5 py-2.5 bg-[#050507] border border-zinc-800 rounded-xl focus:outline-none focus:border-zinc-600 text-white font-medium transition-colors duration-150 cursor-pointer"
+            >
+              <option value="B.Tech / Diploma">B.Tech / Diploma</option>
+              <option value="All Specializations">All Specializations</option>
+              <option value="Computer Applications">Computer Applications</option>
+            </select>
           </div>
+          
         </div>
 
         {/* Submit Operations Button with Ripple Animation */}

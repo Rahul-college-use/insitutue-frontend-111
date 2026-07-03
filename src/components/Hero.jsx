@@ -1,6 +1,8 @@
 import { Clock, CheckCircle, QrCode, Users, FileText, Search, Briefcase, Award } from 'lucide-react';
-
+import { useNavigate } from 'react-router-dom';
 export default function Hero() {
+  const navigate = useNavigate();
+
   const inlineFeatures = [
     { icon: <Clock className="w-5 h-5 text-blue-600" />, label: "120 Hours Internship", bg: "bg-blue-50" },
     { icon: <CheckCircle className="w-5 h-5 text-orange-500" />, label: "AICTE & UGC Compliant", bg: "bg-orange-50" },
@@ -21,7 +23,7 @@ export default function Hero() {
     <section className="relative overflow-hidden bg-gradient-to-r from-blue-50/30 via-white to-transparent">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-12 pb-20 lg:pt-16 lg:pb-28">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-          
+
           {/* Left Content Side */}
           <div className="lg:col-span-6 z-10">
             <div className="flex flex-wrap gap-3 mb-6 items-center text-[11px] font-bold tracking-wide uppercase text-slate-600">
@@ -34,7 +36,7 @@ export default function Hero() {
               Bihar's Largest <br />
               <span className="text-[#0066ff]">Internship Platform</span>
             </h1>
-            
+
             <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-800 mb-6">
               for <span className="text-[#ff9900]">Engineering</span> & <span className="text-emerald-600">UGC Students</span>
             </h2>
@@ -57,7 +59,10 @@ export default function Hero() {
 
             {/* CTA Elements */}
             <div className="flex flex-wrap gap-4">
-              <button className="bg-[#0066ff] hover:bg-blue-700 text-white font-bold text-sm px-6 py-3.5 rounded-md shadow-lg shadow-blue-200 flex items-center gap-2 transition transform hover:-translate-y-0.5">
+              <button onClick={
+                () => navigate('/login')
+              }
+                className="bg-[#0066ff] hover:bg-blue-700 text-white font-bold text-sm px-6 py-3.5 rounded-md shadow-lg shadow-blue-200 flex items-center gap-2 transition transform hover:-translate-y-0.5">
                 🚀 Start Your Internship →
               </button>
               <button className="border-2 border-blue-200 hover:border-blue-600 text-[#0066ff] font-bold text-sm px-6 py-3.5 rounded-md flex items-center gap-2 bg-white transition">
@@ -69,11 +74,11 @@ export default function Hero() {
           {/* Right Visual Frame Side */}
           <div className="lg:col-span-6 relative flex items-center justify-center">
             <div className="relative w-full max-w-xl lg:max-w-none">
-              
+
               <div className="rounded-2xl overflow-hidden bg-slate-100 shadow-xl border-4 border-white aspect-[4/3] relative">
-                <img 
-                  src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=800&q=80" 
-                  alt="Students working together" 
+                <img
+                  src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=800&q=80"
+                  alt="Students working together"
                   className="w-full h-full object-cover"
                 />
                 <div className="absolute inset-0 bg-gradient-to-r from-blue-600/10 to-transparent mix-blend-multiply" />

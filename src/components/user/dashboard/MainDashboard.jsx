@@ -12,6 +12,7 @@ export default function MainDashboard({ user }) {
 
   // Derive the active enrolled list up-front
   const enrolledList = user?.enrolledCourses || [];
+  console.log("Active enrolled courses for user:", enrolledList);
 
   // Load dynamic global catalog mapping arrays safely
   const loadCatalogData = useCallback(async () => {
@@ -31,7 +32,7 @@ export default function MainDashboard({ user }) {
     const verifyRealtimeAttendance = async () => {
       // Pehle enrolled course ki ID uthayenge status check karne ke liye
       const currentCourseId = enrolledList[0]?._id || enrolledList[0]?.id;
-      
+
       if (!currentCourseId) {
         console.log("No active enrolled course found to check attendance status.");
         return;
@@ -61,6 +62,7 @@ export default function MainDashboard({ user }) {
 
   const handleDailyCheckIn = async () => {
     const currentCourseId = enrolledList[0]?._id || enrolledList[0]?.id;
+    console.log("Attempting to log check-in for course:", currentCourseId);
 
     if (!currentCourseId) {
       alert("No active training module found to check into.");
@@ -95,7 +97,7 @@ export default function MainDashboard({ user }) {
       const res = await apiService.enrollUser(courseId);
       if (res && res.success) {
         alert("🎉 Successfully Enrolled! Please refresh or wait for admin activation.");
-        window.location.reload(); 
+        window.location.reload();
       } else {
         alert(res.message || "Enrollment allocation failed.");
       }
@@ -155,37 +157,49 @@ export default function MainDashboard({ user }) {
             </div>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {enrolledList.map((course) => (
-                <div key={course._id || course.id} className="bg-white border border-slate-200 rounded-3xl overflow-hidden shadow-sm flex flex-col justify-between hover:border-slate-300 transition">
+              {enrolledList && (
+                <div className="bg-white border border-slate-200 rounded-3xl overflow-hidden shadow-sm flex flex-col justify-between hover:border-slate-300 transition">
                   <div className="p-5 space-y-3">
                     <span className="text-[9px] font-black text-[#0066ff] bg-blue-50 px-2.5 py-1 rounded-md uppercase tracking-wider w-fit block">
-                      {course.cert || "Compliant Module"}
+                      {enrolledList.cert || "Compliant Module"}
                     </span>
+
                     <div>
                       <h4 className="font-bold text-slate-900 text-sm sm:text-base leading-snug">
-                        {course.courseName || course.title}
+                        {enrolledList.courseName || enrolledList.title}
                       </h4>
+
                       <p className="text-[10px] text-slate-400 font-bold tracking-wide uppercase mt-0.5">
-                        {course.meta || "Specialization Track"}
+                        {enrolledList.meta || "Specialization Track"}
                       </p>
                     </div>
+
                     <p className="text-xs text-slate-500 line-clamp-2 font-medium leading-relaxed">
-                      {course.description}
+                      {enrolledList.description}
                     </p>
                   </div>
 
                   <div className="px-5 py-3 bg-slate-50 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-500 font-semibold">
                     <div className="flex items-center gap-1.5">
                       <Calendar className="w-3.5 h-3.5 text-slate-400" />
-                      <span>Start: {course.courseStartDate ? new Date(course.courseStartDate).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' }) : "Live Today"}</span>
+                      <span>
+                        Start:{" "}
+                        {enrolledList.courseStartDate
+                          ? new Date(enrolledList.courseStartDate).toLocaleDateString("en-IN", {
+                            day: "numeric",
+                            month: "short",
+                          })
+                          : "Live Today"}
+                      </span>
                     </div>
+
                     <div className="flex items-center gap-1">
                       <Clock className="w-3.5 h-3.5 text-emerald-500" />
                       <span className="text-emerald-600 font-bold">Active</span>
                     </div>
                   </div>
                 </div>
-              ))}
+              )}
             </div>
           )}
         </div>

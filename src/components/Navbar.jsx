@@ -73,12 +73,12 @@ export default function Navbar({ isAuthenticated, setIsAuthenticated }) {
                     </div>
                     <div className="hidden sm:block min-w-0">
                         <div className="text-base md:text-xl font-black text-slate-900 tracking-tight flex items-center gap-1">
-                            Make <span className="text-[#ff9900]">Intern</span>
+                            Intern <span className="text-[#ff9900]">Place</span>
                         </div>
                         <div className="text-[10px] text-slate-400 font-medium tracking-widest uppercase">Learn. Intern. Grow.</div>
                     </div>
                     <div className="block sm:hidden text-base font-black text-slate-900">
-                        Make<span className="text-[#ff9900]">Intern</span>
+                        Intern<span className="text-[#ff9900]">Place</span>
                     </div>
                 </div>
 

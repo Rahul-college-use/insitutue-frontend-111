@@ -15,12 +15,24 @@ export default function LiveClasses({ user }) {
   const chatEndRef = useRef(null);
 
   // 1. Core user variables initialization
-  const enrolledArray = user?.enrolledCourses || [];
-  const activeCourse = enrolledArray.length === 1 ? enrolledArray[0] : (user?.enrolledCourse || null);
-  const targetCourseId = activeCourse?._id || "general-class-room";
-  const activeStudentName = user?.fullName || "Student Node";
+const rawEnrolled = user?.enrolledCourses;
 
-  // 2. Data extraction order (Pehle liveClassData ko check karein, uske baad link ko)
+// Force it into an array format regardless of how the backend sent it
+const enrolledArray = Array.isArray(rawEnrolled) 
+  ? rawEnrolled 
+  : (rawEnrolled ? [rawEnrolled] : []);
+
+// Safely extract active course
+const activeCourse = enrolledArray.length > 0 
+  ? enrolledArray[0] 
+  : (user?.enrolledCourse || null);
+
+// Use the real object database ID if it exists, otherwise fall back safely
+const targetCourseId = activeCourse?._id || "general-class-room";
+const activeStudentName = user?.fullName || "Student Node";
+
+// console.log("enrolledArray:", enrolledArray, "array length:", enrolledArray.length, "activeCourse:", activeCourse, "targetCourseId:", targetCourseId);
+ // 2. Data extraction order (Pehle liveClassData ko check karein, uske baad link ko)
   const liveClassData = activeCourse?.liveClass || null;
   const rawStreamLink = liveClassData?.link || activeCourse?.streamLink || '';
   const liveTopicTitle = liveClassData?.topic || activeCourse?.liveTopic || "Not Live Institutional Interaction Session";
@@ -55,12 +67,7 @@ export default function LiveClasses({ user }) {
   const liveSourcePayload = streamEngineType === 'youtube' ? extractYoutubeId(rawStreamLink) : rawStreamLink;
 
   // 5. Debugging Logger
-  useEffect(() => {
-    console.log("=== LIVE CLASS CONSOLE TRACKER ===");
-    console.log("User Prop Received:", user);
-    console.log("Active Course Object:", activeCourse);
-    console.log("Calculated Link Payload:", liveSourcePayload);
-  }, [user, activeCourse, liveSourcePayload]);
+  
 
   // 6. Socket pipelines and API sync
   useEffect(() => {

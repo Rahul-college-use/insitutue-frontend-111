@@ -41,8 +41,8 @@ const activeStudentName = user?.fullName || "Student Node";
   const isLinkLoaded = !!rawStreamLink;
   const isChatCurrentlyAllowed = isChatAllowed && isLinkLoaded;
 
-  // const url = "http://localhost:3000";
-  const url = "https://internshipplace-bend.vercel.app";
+  const url = "http://localhost:3000";
+  // const url = "https://internshipplace-bend.vercel.app";
 
   // 3. Helper Functions
   const getStreamEngineType = (linkUrl) => {

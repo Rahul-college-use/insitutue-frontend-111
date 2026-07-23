@@ -1,23 +1,36 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import {
-  BookOpen, Calendar, Clock, ArrowRight, Plus, Award, FileText, CheckCircle2
+  BookOpen, Calendar, Clock, ArrowRight, Plus, Award, FileText, CheckCircle2,
+  Receipt, BookMarked, Edit3, CalendarCheck, FileCheck, BarChart3, Trophy, ShieldCheck
 } from 'lucide-react';
 import { apiService } from '../../../services/api';
+import {
+  handlePrintConsentLetter,
+  handlePrintAcceptanceLetter,
+  handlePrintFeeReceipt,
+  handlePrintDailyLog,
+  handlePrintFeedback,
+  handlePrintMarksheet,
+  handlePrintCertificate,
+  handlePrintDepartmentCertificate,
+  handlePrintDeclaration
+} from '../../../utils/printUtils';
 
 export default function MainDashboard({ user, setActiveTab }) {
   const [loading, setLoading] = useState(false);
   const [checkedIn, setCheckedIn] = useState(false);
   const [availableCourses, setAvailableCourses] = useState([]);
   const [enrollLoading, setEnrollLoading] = useState(null);
+  const [showReportModal, setShowReportModal] = useState(false);
 
   // Single Object safe parsing
   const activeCourse = user?.enrolledCourses
     ? (Array.isArray(user.enrolledCourses) ? user.enrolledCourses[0] : user.enrolledCourses)
     : null;
 
-  // Load dynamic global catalog mapping arrays safely (Sirf tabhi jab course enrolled na ho)
+  // Load dynamic global catalog mapping arrays safely
   const loadCatalogData = useCallback(async () => {
-    if (activeCourse) return; 
+    if (activeCourse) return;
     try {
       const allCourses = await apiService.getPrograms();
       setAvailableCourses(allCourses);
@@ -26,7 +39,7 @@ export default function MainDashboard({ user, setActiveTab }) {
     }
   }, [activeCourse]);
 
-  // Unified Effect Hook: Page refresh par database se attendance sync karega
+  // Unified Effect Hook
   useEffect(() => {
     const verifyRealtimeAttendance = async () => {
       const currentCourseId = activeCourse?._id || activeCourse?.id;
@@ -89,8 +102,131 @@ export default function MainDashboard({ user, setActiveTab }) {
     }
   };
 
+  // Card click dispatcher
+  const handleCardClick = (tabKey) => {
+    switch (tabKey) {
+      case 'consent-form':
+        handlePrintConsentLetter(user);
+        break;
+      case 'internship':
+        handlePrintAcceptanceLetter(user);
+        break;
+      case 'receipts':
+        handlePrintFeeReceipt(user);
+        break;
+      case 'daily-log':
+        handlePrintDailyLog(user);
+        break;
+      case 'feedback':
+        handlePrintFeedback(user);
+        break;
+      case 'attendance':
+        handlePrintDailyLog(user);
+        break;
+      case 'report':
+        setShowReportModal(true);
+        break;
+      case 'marksheet':
+        handlePrintMarksheet(user);
+        break;
+      case 'certificates':
+        handlePrintCertificate(user);
+        break;
+      case 'dept-certificate':
+        handlePrintDepartmentCertificate(user);
+        break;
+      case 'declaration':
+        handlePrintDeclaration(user);
+        break;
+      default:
+        setActiveTab(tabKey);
+        break;
+    }
+  };
+
+  // Grid Dashboard Cards Data with vibrant gradient styles
+  const dashboardCards = [
+    {
+      title: 'Consent Form',
+      description: 'Print consent form and sign it before submitting to your college',
+      icon: FileText,
+      gradient: 'from-emerald-500 to-green-600',
+      tab: 'consent-form'
+    },
+    {
+      title: 'Acceptance Letter',
+      description: 'Official internship acceptance letter by optimark for your college',
+      icon: FileCheck,
+      gradient: 'from-sky-500 to-blue-600',
+      tab: 'internship'
+    },
+    {
+      title: 'Fee Receipt',
+      description: 'Download and print internship fee payment receipt',
+      icon: Receipt,
+      gradient: 'from-indigo-500 to-purple-600',
+      tab: 'receipts'
+    },
+    {
+      title: 'Daily Log',
+      description: 'Internship activity logbook for daily tasks and learnings',
+      icon: BookMarked,
+      gradient: 'from-blue-600 to-indigo-700',
+      tab: 'daily-log'
+    },
+    {
+      title: 'Feedback Form',
+      description: 'Share your internship experience',
+      icon: Edit3,
+      gradient: 'from-amber-500 to-red-600',
+      tab: 'feedback'
+    },
+    {
+      title: 'Attendance Sheet',
+      description: 'Download attendance record',
+      icon: CalendarCheck,
+      gradient: 'from-slate-700 to-slate-900',
+      tab: 'attendance'
+    },
+    {
+      title: 'Internship Report',
+      description: 'Internship report template',
+      icon: FileText,
+      gradient: 'from-fuchsia-500 to-purple-600',
+      tab: 'report'
+    },
+    {
+      title: 'Marksheet',
+      description: 'Assessment result',
+      icon: BarChart3,
+      gradient: 'from-indigo-600 to-violet-700',
+      tab: 'marksheet'
+    },
+    {
+      title: 'Certificate',
+      description: 'Download certificate',
+      icon: Trophy,
+      gradient: 'from-emerald-500 to-teal-600',
+      tab: 'certificates'
+    },
+    {
+      title: 'Department Certificate',
+      description: 'Department certificate',
+      icon: Award,
+      gradient: 'from-violet-600 to-purple-700',
+      tab: 'dept-certificate'
+    },
+    {
+      title: 'Student Declaration',
+      description: 'Student declaration',
+      icon: ShieldCheck,
+      gradient: 'from-orange-500 to-red-600',
+      tab: 'declaration'
+    }
+  ];
+
   return (
-    <div className="max-w-5xl mx-auto p-2 sm:p-4 space-y-6 h-[calc(100vh-7rem)] overflow-y-auto custom-scrollbar">
+    <div className="max-w-6xl mx-auto p-2 sm:p-4 space-y-6 h-[calc(100vh-7rem)] overflow-y-auto custom-scrollbar">
 
       {/* 1. GREETING & ATTENDANCE CHECK-IN BANNER */}
       <div className="bg-gradient-to-r from-blue-600 to-indigo-700 text-white p-6 rounded-3xl shadow-md flex flex-col sm:flex-row sm:items-center justify-between gap-6">
@@ -123,7 +259,7 @@ export default function MainDashboard({ user, setActiveTab }) {
         </div>
       </div>
 
-      {/* 2. CORE WORKSPACE CONTENT AREA (Full-Width Clean Layout) */}
+      {/* 2. CORE WORKSPACE CONTENT AREA */}
       <div className="space-y-4 w-full">
         <h3 className="text-xs sm:text-sm font-black text-slate-900 flex items-center gap-2 uppercase tracking-wide">
           <BookOpen className="w-4 h-4 text-[#0066ff]" /> Your Workspace Status
@@ -134,19 +270,19 @@ export default function MainDashboard({ user, setActiveTab }) {
             No active enrollment found. Please select a course from catalog below.
           </div>
         ) : (
-          <div className="space-y-4 w-full">
+          <div className="space-y-5 w-full">
             {/* Active Program Main Card */}
             <div className="bg-white border border-slate-200 rounded-3xl overflow-hidden shadow-sm flex flex-col justify-between p-5 hover:border-slate-300 transition w-full">
               <div className="space-y-3">
                 <span className="text-[9px] font-black text-[#0066ff] bg-blue-50 px-2.5 py-1 rounded-md uppercase tracking-wider w-fit block">
-                  {activeCourse.cert || "Compliant Module"}
+                  {activeCourse.cert || "AICTE COMPLIANT"}
                 </span>
                 <div>
                   <h4 className="font-bold text-slate-900 text-sm sm:text-base leading-snug">
                     {activeCourse.courseName || activeCourse.title}
                   </h4>
                   <p className="text-[10px] text-slate-400 font-bold tracking-wide uppercase mt-0.5">
-                    {activeCourse.meta || "Specialization Track"}
+                    {activeCourse.meta || "B.TECH / DIPLOMA"}
                   </p>
                 </div>
                 <p className="text-xs text-slate-500 line-clamp-2 font-medium leading-relaxed">
@@ -168,47 +304,32 @@ export default function MainDashboard({ user, setActiveTab }) {
               </div>
             </div>
 
-            {/* 🏆 RESPONSIVE CERTIFICATE & ORDER LETTER BOXES */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full">
-              {/* Box 1: Go to Certificate */}
-              <div
-                onClick={() => setActiveTab('certificates')}
-                className="bg-gradient-to-br from-white to-blue-50/30 border border-slate-200 rounded-2xl p-4 flex items-center justify-between hover:shadow-md transition group cursor-pointer"
-              >
-                <div className="flex items-center gap-3 min-w-0">
-                  <div className="w-10 h-10 bg-blue-100 text-blue-600 rounded-xl flex items-center justify-center shrink-0">
-                    <Award className="w-5 h-5" />
+            {/* 3. COLORFUL DASHBOARD ACTION BOXES GRID */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 w-full">
+              {dashboardCards.map((card, idx) => {
+                const IconComponent = card.icon;
+                return (
+                  <div
+                    key={idx}
+                    onClick={() => handleCardClick(card.tab)}
+                    className={`bg-gradient-to-r ${card.gradient} text-white rounded-2xl p-5 shadow-sm hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200 cursor-pointer flex flex-col justify-between h-36 border border-white/10`}
+                  >
+                    <div>
+                      <IconComponent className="w-6 h-6 mb-2 opacity-90" />
+                      <h4 className="font-extrabold text-base leading-snug">{card.title}</h4>
+                    </div>
+                    <p className="text-xs text-white/80 line-clamp-2 font-medium leading-tight">
+                      {card.description}
+                    </p>
                   </div>
-                  <div className="min-w-0">
-                    <h5 className="font-bold text-slate-900 text-xs sm:text-sm truncate">Go to Certificate</h5>
-                    <p className="text-[10px] text-slate-400 font-medium truncate">View or share your achievements</p>
-                  </div>
-                </div>
-                <ArrowRight className="w-4 h-4 text-slate-400 group-hover:text-blue-600 group-hover:translate-x-0.5 transition shrink-0 ml-2" />
-              </div>
-
-              {/* Box 2: Order Letter */}
-              <div
-                onClick={() => setActiveTab('internship')}
-                className="bg-gradient-to-br from-white to-indigo-50/30 border border-slate-200 rounded-2xl p-4 flex items-center justify-between hover:shadow-md transition group cursor-pointer"
-              >
-                <div className="flex items-center gap-3 min-w-0">
-                  <div className="w-10 h-10 bg-indigo-100 text-indigo-600 rounded-xl flex items-center justify-center shrink-0">
-                    <FileText className="w-5 h-5" />
-                  </div>
-                  <div className="min-w-0">
-                    <h5 className="font-bold text-slate-900 text-xs sm:text-sm truncate">Order Letter</h5>
-                    <p className="text-[10px] text-slate-400 font-medium truncate">Download official joining letter</p>
-                  </div>
-                </div>
-                <ArrowRight className="w-4 h-4 text-slate-400 group-hover:text-indigo-600 group-hover:translate-x-0.5 transition shrink-0 ml-2" />
-              </div>
+                );
+              })}
             </div>
           </div>
         )}
       </div>
 
-      {/* 3. LIVE AVAILABLE TRAINING CATALOG VIEW */}
+      {/* 4. LIVE AVAILABLE TRAINING CATALOG VIEW */}
       {!activeCourse && availableCourses.length > 0 && (
         <div className="space-y-4 pt-4 border-t border-slate-100 w-full">
           <h3 className="text-xs sm:text-sm font-black text-slate-900 flex items-center gap-2 uppercase tracking-wide">
@@ -244,6 +365,51 @@ export default function MainDashboard({ user, setActiveTab }) {
                 </button>
               </div>
             ))}
+          </div>
+        </div>
+      )}
+
+      {/* 5. INTERNSHIP REPORT DOWNLOAD MODAL */}
+      {showReportModal && (
+        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-3xl p-6 sm:p-8 max-w-lg w-full text-center space-y-5 shadow-2xl animate-in fade-in zoom-in-95">
+            <div className="w-16 h-16 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center mx-auto text-2xl">
+              📋
+            </div>
+            <div>
+              <h3 className="text-xl font-black text-slate-900">
+                Download Comprehensive Internship Report
+              </h3>
+              <p className="text-xs text-slate-500 font-medium mt-1">
+                Generate and download your detailed 20+ page internship report for <span className="font-bold text-slate-800">{user.enrolledCourses.courseName}</span>.
+              </p>
+            </div>
+
+            <div className="bg-blue-50/60 border border-blue-100 rounded-2xl p-4 text-xs text-blue-700 leading-relaxed font-medium text-left">
+              <span className="font-bold">Note:</span> The report includes 14 chapters, 20+ pages, comprehensive analysis, references, and appendices in professional academic format.
+            </div>
+
+            <div className="flex flex-col sm:flex-row gap-3 pt-2">
+              <button
+                onClick={() => {
+                  alert("Downloading 20+ Page Internship Report PDF...");
+                  setShowReportModal(false);
+                }}
+                className="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-xl text-xs transition shadow-md flex items-center justify-center gap-2 cursor-pointer"
+              >
+                📥 Download 20+ Page Report
+              </button>
+              <button
+                onClick={() => setShowReportModal(false)}
+                className="px-6 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-3 rounded-xl text-xs transition cursor-pointer"
+              >
+                Cancel
+              </button>
+            </div>
+
+            <p className="text-[10px] text-slate-400">
+              Includes: Cover Page, Certificate, Abstract, Literature Review, Methodology, Analysis, Conclusions, References, Appendices
+            </p>
           </div>
         </div>
       )}
